@@ -48,7 +48,7 @@ export default async function proxyM3U8(url, headers, res) {
       if (line.startsWith("#")) {
         if (line.startsWith("#EXT-X-KEY:")) {
           const regex = /https?:\/\/[^\""\s]+/g;
-          const url = `${web_server_url}${
+          const url = `${
             "/ts-proxy?url=" +
             encodeURIComponent(regex.exec(line)?.[0] ?? "") +
             "&headers=" +
@@ -57,9 +57,9 @@ export default async function proxyM3U8(url, headers, res) {
           newLines.push(line.replace(regex, url));
         } else if (line.startsWith("#EXT-X-MEDIA:TYPE=AUDIO")) {
           const regex = /https?:\/\/[^\""\s]+/g;
-          const url = `${web_server_url}${
-            "/proxy?url=" +
-            encodeURIComponent(regex.exec(line)?.[0] ?? "") +
+          const url = `${
+            "/proxy?url" +
+            "=" + encodeURIComponent(regex.exec(line)?.[0] ?? "") +
             "&headers=" +
             encodeURIComponent(JSON.stringify(effectiveHeaders))
           }`;
@@ -71,7 +71,6 @@ export default async function proxyM3U8(url, headers, res) {
         const uri = new URL(line, url);
         newLines.push(
           `${
-            web_server_url +
             "/proxy?url=" +
             encodeURIComponent(uri.href) +
             "&headers=" +
@@ -114,7 +113,7 @@ export default async function proxyM3U8(url, headers, res) {
       if (line.startsWith("#")) {
         if (line.startsWith("#EXT-X-KEY:")) {
           const regex = /https?:\/\/[^\""\s]+/g;
-          const url = `${web_server_url}${
+          const url = `${
             "/ts-proxy?url=" +
             encodeURIComponent(regex.exec(line)?.[0] ?? "") +
             "&headers=" +
@@ -128,7 +127,7 @@ export default async function proxyM3U8(url, headers, res) {
         const uri = new URL(line, url);
 
         newLines.push(
-          `${web_server_url}${
+          `${
             "/ts-proxy?url=" +
             encodeURIComponent(uri.href) +
             "&headers=" +
