@@ -10,6 +10,7 @@ import proxyM3U8 from "./proxyM3U8.js";
 import { proxyTs } from "./proxyTS.js";
 import proxyRequest from "./proxyRequest.js";
 import { generateHeadersForDomain } from "./domainTemplates.js";
+import { proxyMp4 } from "./proxyMP4.js";
 
 export default function getHandler(options, proxy) {
   const corsAnywhere = {
@@ -142,6 +143,25 @@ export default function getHandler(options, proxy) {
           const targetUrl = new URL(url ?? "");
           const finalHeaders = generateHeadersForDomain(targetUrl, headers);
           return proxyTs(targetUrl.href, finalHeaders, req, res);
+        } catch (err) {
+          res.writeHead(400);
+          res.end("Invalid url parameter");
+          return;
+        }
+      } else if (uri.pathname === "/mp4-proxy") {
+        let headers = {};
+        try {
+          headers = JSON.parse(uri.searchParams.get("headers") ?? "{}");
+        } catch (e) {
+          res.writeHead(500);
+          res.end(e.message);
+          return;
+        }
+        const url = uri.searchParams.get("url");
+        try {
+          const targetUrl = new URL(url ?? "");
+          const finalHeaders = generateHeadersForDomain(targetUrl, headers);
+          return proxyMp4(targetUrl.href, finalHeaders, req, res);
         } catch (err) {
           res.writeHead(400);
           res.end("Invalid url parameter");
