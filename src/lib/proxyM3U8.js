@@ -44,6 +44,21 @@ export default async function proxyM3U8(url, headers, res) {
             encodeURIComponent(JSON.stringify(headers))
             }`;
           newLines.push(line.replace(regex, url));
+        } else if (line.startsWith("#EXT-X-MAP:")) {
+          const uriRegex = /URI="([^"]+)"/;
+          const match = uriRegex.exec(line);
+          if (match) {
+            const originalUri = match[1];
+            const resolvedUri = new URL(originalUri, url).href;
+            const newUrl = `${web_server_url}${"/ts-proxy?url=" +
+              encodeURIComponent(resolvedUri) +
+              "&headers=" +
+              encodeURIComponent(JSON.stringify(headers))
+              }`;
+            newLines.push(line.replace(originalUri, newUrl));
+          } else {
+            newLines.push(line);
+          }
         } else {
           newLines.push(line);
         }
@@ -99,6 +114,21 @@ export default async function proxyM3U8(url, headers, res) {
             encodeURIComponent(JSON.stringify(headers))
             }`;
           newLines.push(line.replace(regex, url));
+        } else if (line.startsWith("#EXT-X-MAP:")) {
+          const uriRegex = /URI="([^"]+)"/;
+          const match = uriRegex.exec(line);
+          if (match) {
+            const originalUri = match[1];
+            const resolvedUri = new URL(originalUri, url).href;
+            const newUrl = `${web_server_url}${"/ts-proxy?url=" +
+              encodeURIComponent(resolvedUri) +
+              "&headers=" +
+              encodeURIComponent(JSON.stringify(headers))
+              }`;
+            newLines.push(line.replace(originalUri, newUrl));
+          } else {
+            newLines.push(line);
+          }
         } else {
           newLines.push(line);
         }
